@@ -10,6 +10,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 import { saveAs } from 'file-saver';
 import { Download, FileText, Loader2, Sparkles } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 const GEMINI_API_KEY = 'AIzaSyBTUQyapT_ALtGXDjVPQSeZvXnsLEGODqE';
@@ -27,6 +28,9 @@ export const EssayWriter = () => {
   const [subject, setSubject] = useState('');
   const [writingStyle, setWritingStyle] = useState('');
   const [wordCount, setWordCount] = useState([1500]);
+  const [about, setAbout] = useState('');
+  const [extraDetails, setExtraDetails] = useState('');
+  const [includeReferences, setIncludeReferences] = useState(false);
   const [generatedEssay, setGeneratedEssay] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -45,16 +49,23 @@ export const EssayWriter = () => {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
+      const aboutSection = about ? `\n\nAbout this essay: ${about}` : '';
+      const extraSection = extraDetails ? `\n\nAdditional details to consider: ${extraDetails}` : '';
+      const referencesNote = includeReferences ? '\n- Include proper references and citations throughout the essay' : '';
+
       const prompt = `Write a comprehensive ${writingStyle} essay about "${subject}". 
-      The essay should be approximately ${wordCount[0]} words long.
+      The essay should be approximately ${wordCount[0]} words long.${aboutSection}${extraSection}
       
       Requirements:
       - Follow ${writingStyle} writing standards and conventions
+      - Write in a natural, human-like style that flows smoothly and avoids robotic or AI-generated language
+      - Use varied sentence structures and natural transitions
       - Include a strong introduction with a clear thesis statement
       - Develop multiple well-structured body paragraphs with supporting evidence
       - Conclude with a thoughtful summary that reinforces the main arguments
       - Use appropriate tone and language for ${writingStyle} level
-      - Ensure proper flow and transitions between paragraphs
+      - Ensure proper flow and transitions between paragraphs${referencesNote}
+      - Make the writing engaging and authentic, as if written by a skilled human writer
       
       Please provide only the essay content without any additional commentary or formatting instructions.`;
 
@@ -84,13 +95,22 @@ export const EssayWriter = () => {
           properties: {},
           children: [
             new Paragraph({
-              text: subject,
+              children: [new TextRun({
+                text: subject,
+                font: "Arial",
+                size: 32, // 16pt for heading
+                bold: true,
+              })],
               heading: HeadingLevel.HEADING_1,
               spacing: { after: 400 },
             }),
             ...generatedEssay.split('\n\n').map(paragraph => 
               new Paragraph({
-                children: [new TextRun(paragraph.trim())],
+                children: [new TextRun({
+                  text: paragraph.trim(),
+                  font: "Arial",
+                  size: 24, // 12pt
+                })],
                 spacing: { after: 200 },
               })
             ),
@@ -163,6 +183,28 @@ export const EssayWriter = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="about">About This Essay</Label>
+                <Textarea
+                  id="about"
+                  placeholder="Describe what this essay/report is about..."
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                  className="min-h-[80px] transition-all duration-300 focus:shadow-glow"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="extra">Extra Details</Label>
+                <Textarea
+                  id="extra"
+                  placeholder="Any additional requirements or specific points to cover..."
+                  value={extraDetails}
+                  onChange={(e) => setExtraDetails(e.target.value)}
+                  className="min-h-[80px] transition-all duration-300 focus:shadow-glow"
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="wordcount">
                   Word Count: {wordCount[0]} words
                 </Label>
@@ -179,6 +221,17 @@ export const EssayWriter = () => {
                   <span>500</span>
                   <span>3000</span>
                 </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="references" 
+                  checked={includeReferences}
+                  onCheckedChange={(checked) => setIncludeReferences(checked === true)}
+                />
+                <Label htmlFor="references" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Include references and citations
+                </Label>
               </div>
 
               <Button
