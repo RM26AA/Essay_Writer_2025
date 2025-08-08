@@ -43,7 +43,7 @@ export const EssayWriter = () => {
     setIsGenerating(true);
     try {
       const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
       const prompt = `Write a comprehensive ${writingStyle} essay about "${subject}". 
       The essay should be approximately ${wordCount[0]} words long.
