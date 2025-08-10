@@ -1,4 +1,86 @@
-# Welcome to your Lovable project
+# Academic Essay & Report Writer
+
+A web-based application that uses Google's **Gemini AI** (`gemini-2.0-flash`) to generate academic essays or reports up to **3,000 words**. Users can define the subject, writing style, and additional details, and optionally include references. The generated content can be downloaded as a **Word (.docx)** file styled in Arial for a professional look.
+
+## ✨ Features
+
+- **Subject Title & Writing Style** — Choose between academic, university, college, etc.
+- **Word Count Control** — Adjustable from 0–3000 words.
+- **About & Extra Details** — Add background information and special instructions.
+- **Include References** — Optional checkbox for AI to generate citations/references.
+- **Human-like Writing** — AI is prompted to produce natural, less robotic content.
+- **Download as Word Document** — Automatically formatted in Arial font.
+- **Responsive Design** — Works across desktop and mobile browsers.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React + TypeScript
+- **API:** Google Gemini AI (`gemini-2.0-flash`)
+- **Styling:** Tailwind CSS
+- **Document Generation:** `docx` npm package
+
+## 🚀 Getting Started
+
+1. Clone the Repository
+```bash
+git clone https://github.com/YOUR_USERNAME/essay-writer.git
+cd essay-writer
+```
+
+2. Install Dependencies
+```
+npm install
+```
+
+3. Add Your Gemini API Key
+Create a .env file in the root directory:
+```
+VITE_GEMINI_API_KEY=your_api_key_here
+```
+
+4. Run the Development Server
+```
+npm run dev
+```
+
+5. Build for Production
+```
+npm run build
+```
+
+## 📄 Usage
+
+- Enter the Subject Title and select the Writing Style.
+- Adjust the Word Count slider (0–3000 words).
+- Provide About information and any Extra Details.
+- Tick Include References if needed.
+- Click Generate Essay to get AI-generated content.
+- Download the result as a Word (.docx) file.
+
+## 🔑 API Reference
+The app uses the Google Generative Language API with the gemini-2.0-flash:generateContent model.
+Example request:
+
+```
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" \
+  -H "Content-Type: application/json" \
+  -H "X-goog-api-key: YOUR_API_KEY" \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          { "text": "Explain how AI works in a few words" }
+        ]
+      }
+    ]
+  }'
+```
+
+## 📜 License
+This project is licensed under the MIT License — see the LICENSE file for details.
+
+# Lovable project
 
 ## Project info
 
